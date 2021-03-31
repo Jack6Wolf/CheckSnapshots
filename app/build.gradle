@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-apply plugin: 'checksnapshot'
-snapshotCheck {
-    dump = true // 是否将依赖写到build/dependency.txt
-    abortBuild = true // 如果有snapshot 是否中断打包
-    checkBuildTypes = ['release', 'prod'] // 在指定的build type会做snapshot检查
-//    needCheck = true //和checkBuildTypes互相冲突 是否需要做snapshot检查
-}
+//apply plugin: 'checksnapshot'
+//snapshotCheck {
+//    dump = true // 是否将依赖写到build/dependency.txt
+//    abortBuild = true // 如果有snapshot 是否中断打包
+//    checkBuildTypes = ['release', 'prod'] // 在指定的build type会做snapshot检查
+////    needCheck = true //和checkBuildTypes互相冲突 是否需要做snapshot检查
+//}
 
 android {
     compileSdkVersion 30
