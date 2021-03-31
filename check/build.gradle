@@ -1,0 +1,25 @@
+apply plugin: 'groovy'
+apply plugin: 'kotlin'
+
+dependencies {
+    implementation gradleApi()
+    implementation localGroovy()
+    implementation 'com.android.tools.build:gradle:4.0.1'
+}
+
+//本地依赖
+apply plugin: 'maven'
+//发布的版本号
+version = "1.0.0"
+//唯一标识（通常为模块包名，也可以任意）
+group = "com.jack.plugin"
+archivesBaseName = "checksnapshots"
+
+uploadArchives { //当前项目可以发布到本地文件夹中
+    repositories {
+        mavenDeployer {
+            ////定义本地maven仓库的地址
+            repository(url: uri('./checks'))
+        }
+    }
+}

@@ -1,0 +1,3 @@
+include ':check'
+include ':app'
+rootProject.name = "CheckSnapShot"
