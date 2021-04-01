@@ -9,12 +9,13 @@ buildscript {
             url uri('./check/checks')
         }
 
-        maven { url 'https://jitpack.io' }
+//        maven { url 'https://jitpack.io' }
+        maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:4.0.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.github.Jack6Wolf:CheckSnapshots:1.0.1'
+        classpath 'com.github.jack6wolf:checksnapshots:1.0.0-SNAPSHOT'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -39,4 +40,9 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+ext {
+    PUBLISH_GROUP_ID = "com.github.jack6wolf"        //项目包名
+    PUBLISH_ARTIFACT_ID = "checksnapshots"           //项目名
+    PUBLISH_VERSION = "1.0.0"                       //版本号
+}
 

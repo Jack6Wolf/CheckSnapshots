@@ -1,0 +1,91 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+ext["signing.keyId"] = ''
+ext["signing.password"] = ''
+ext["signing.secretKeyRingFile"] = ''
+ext["ossrhUsername"] = ''
+ext["ossrhPassword"] = ''
+
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    println "Found secret props file, loading props"
+    Properties p = new Properties()
+    p.load(new FileInputStream(secretPropsFile))
+    p.each { name, value ->
+        ext[name] = value
+    }
+} else {
+    println "No props file, loading env vars"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = rootProject.PUBLISH_ARTIFACT_ID
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = rootProject.PUBLISH_ARTIFACT_ID
+                description = '自由配置检测项目依赖是否含有SNAPSHOT版本'
+                url = 'https://github.com/Jack6Wolf/CheckSnapshots'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'Jack6Wolf'
+                        name = 'jack'
+                        email = 'jackpointpeng@163.com'
+                    }
+                }
+                scm {
+                    //修改成你的Git地址：
+                    connection = 'scm:git:github.com/Jack6Wolf/CheckSnapshots.git'
+                    developerConnection = 'scm:git:ssh://github.com/Jack6Wolf/CheckSnapshots.git'
+                    //分支地址：
+                    url = 'https://github.com/Jack6Wolf/CheckSnapshots/tree/main'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            // change URLs to point to your repos, e.g. http://my.org/repo
+            def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            url = rootProject.PUBLISH_VERSION.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username ossrhUsername
+                password ossrhPassword
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
